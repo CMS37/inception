@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  nginx:
+    build:
+      context: ./requirements/nginx
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 443:443
+    networks:
+      - app-network
+
+  # wordpress:
+  #   build:
+  #     context: ./requirements/wordpress
+  #     dockerfile: Dockerfile
+  #   restart: always
+  #   depends_on:
+  #     - mariadb
+  #   volumes:
+  #     - wordpress-files:/var/www/html
+  #   networks:
+  #     - app-network
+
+  mariadb:
+    build:
+      context: ./requirements/mariadb
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "3306"
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    networks:
+      - app-network
+
+volumes:
+  wordpress-files:
+  mariadb-data:
+
+networks:
+  app-network:

@@ -1,45 +1,59 @@
-version: '3'
+version: '3.8'
 
 services:
-  nginx:
-    build:
-      context: ./requirements/nginx
-      dockerfile: Dockerfile
-    restart: always
-    ports:
-      - 443:443
-    networks:
-      - app-network
+    mariadb:
+        container_name: mariadb
+        build: ./requirements/mariadb
+        restart: always
+        expose:
+            - '3306'
+        env_file:
+            - .env
+        volumes:
+            - mariadb-data:/var/lib/mysql
+        networks:
+            - inception
+        tty: true
 
-  # wordpress:
-  #   build:
-  #     context: ./requirements/wordpress
-  #     dockerfile: Dockerfile
-  #   restart: always
-  #   depends_on:
-  #     - mariadb
-  #   volumes:
-  #     - wordpress-files:/var/www/html
-  #   networks:
-  #     - app-network
+    wordpress:
+        depends_on:
+            - mariadb
+        container_name: wordpress
+        build: ./requirements/wordpress
+        restart: always
+        expose:
+            - '9000'
+        volumes:
+            - wordpress-data:/var/www/html
+        networks:
+            - inception
 
-  mariadb:
-    build:
-      context: ./requirements/mariadb
-      dockerfile: Dockerfile
-    restart: always
-    env_file:
-      - .env
-    ports:
-      - "3306"
-    volumes:
-      - mariadb-data:/var/lib/mysql
-    networks:
-      - app-network
+    nginx:
+        depends_on:
+            - wordpress
+        container_name: ngnix
+        build: ./requirements/nginx
+        restart: always
+        ports:
+            - '443:443'
+        volumes:
+            - wordpress-data:/var/www/html/wordpress
+        networks:
+            - inception
 
-volumes:
-  wordpress-files:
-  mariadb-data:
-
+volumes:	
+    mariadb-data:
+        driver: local
+        driver_opts:
+            type: none
+            o: bind
+            device: /home/min/data/mysql
+    wordpress-data:
+        driver: local
+        driver_opts:
+            type: none
+            o: bind
+            device: /home/min/data/wordpress
 networks:
-  app-network:
+    inception:
+        driver: bridge

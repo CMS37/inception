@@ -1,13 +1,12 @@
 FROM debian:bullseye
 
+
 RUN apt-get update && \
-    apt-get install -y mariadb-server && \
+    apt-get -y install mariadb-server && \
     rm -rf /var/lib/apt/lists/*
 
-RUN mysql_install_db --user=mysql --datadir=/var/lib/mysql && \
-    chown -R mysql:mysql /var/lib/mysql && \
-    service mysql start
+COPY db.sh /usr/local/bin/
 
-EXPOSE 3306
+ENTRYPOINT [ "db.sh" ]
 
-CMD ["mysqld", "--user=mysql", "--console"]
+CMD [ "mysqld_safe" ]

@@ -1,9 +1,10 @@
 FROM debian:bullseye
 
 RUN apt-get update && \
-    apt-get install -y nginx && \
+    apt-get -y install nginx openssl && \
     rm -rf /var/lib/apt/lists/*
 
-EXPOSE 443
+COPY wordpress.conf /etc/nginx/sites-available/
+COPY ng.sh /usr/local/bin
 
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT [ "ng.sh" ]

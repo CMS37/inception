@@ -1,59 +1,80 @@
 version: '3.8'
 
 services:
-    mariadb:
-        container_name: mariadb
-        build: ./requirements/mariadb
-        restart: always
-        expose:
-            - '3306'
-        env_file:
-            - .env
-        volumes:
-            - mariadb-data:/var/lib/mysql
-        networks:
-            - inception
-        tty: true
+  mariadb:
+    build:
+      context: ./requirements/mariadb
+      dockerfile: Dockerfile
+    container_name: mariadb
+    restart: always
+    expose:
+      - 3306
+    env_file:
+      - .env
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - inception
 
-    wordpress:
-        depends_on:
-            - mariadb
-        container_name: wordpress
-        build: ./requirements/wordpress
-        restart: always
-        expose:
-            - '9000'
-        volumes:
-            - wordpress-data:/var/www/html
-        networks:
-            - inception
+  wordpress:
+    depends_on:
+      - mariadb
+    build:
+      context: ./requirements/wordpress
+      dockerfile: Dockerfile
+    container_name: wordpress
+    restart: always
+    expose:
+      - 9000
+    env_file:
+      - .env
+    volumes:
+      - wordpress_data:/var/www/html
+    networks:
+      - inception
 
-    nginx:
-        depends_on:
-            - wordpress
-        container_name: ngnix
-        build: ./requirements/nginx
-        restart: always
-        ports:
-            - '443:443'
-        volumes:
-            - wordpress-data:/var/www/html/wordpress
-        networks:
-            - inception
+  nginx:
+    depends_on:
+      - wordpress
+    build: 
+      context: ./requirements/nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+    restart: always
+    ports:
+      - 443:443
+    volumes:
+      - wordpress_data:/var/www/html
+    networks:
+      - inception
 
-volumes:	
-    mariadb-data:
-        driver: local
-        driver_opts:
-            type: none
-            o: bind
-            device: /home/min/data/mysql
-    wordpress-data:
-        driver: local
-        driver_opts:
-            type: none
-            o: bind
-            device: /home/min/data/wordpress
+volumes:
+  mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/min/data/mariadb
+      o: bind
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/min/data/wordpress
+      o: bind
+
 networks:
-    inception:
-        driver: bridge
+  inception:
+    driver: bridge
+
+
+
+# volumes option
+# bind = 호스트의 디렉토리를 컨테이너의 디렉토리에 마운트 << 컨테이너가 종료되어도 데이터가 남아있음
+# volume = docker볼륨을 생성하여 컨테이너의 디렉토리에 마운트 << 컨테이너가 종료되어도 데이터가 남아있으나 호스트에서는 확인 불가
+# tmpfs = 컨테이너의 디렉토리에 tmpfs 파일 시스템을 마운트 << 컨테이너가 종료되면 데이터가 사라짐
+
+# network
+# bridge = 기본 네트워크 << 컨테이너가 생성될 때마다 자동으로 생성
+# host = 호스트 네트워크 << 호스트의 네트워크를 그대로 사용
+# overlay = 다른 호스트의 컨테이너와 통신할 수 있는 네트워크 << swarm 모드에서 사용
+# macvlan = 컨테이너에 고유의 MAC 주소를 할당할 수 있는 네트워크

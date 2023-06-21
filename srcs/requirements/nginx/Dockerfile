@@ -8,7 +8,7 @@ RUN apt-get update && \
 
 COPY ./conf/nginx.conf /etc/nginx/conf.d
 
-RUN openssl req -newkey rsa:4096 -x509 -days 30 -nodes \
+RUN openssl req -newkey rsa:2048 -x509 -days 30 -nodes \
 				-out /etc/nginx/ssl/min-cho.crt\
 				-keyout /etc/nginx/ssl/min-cho.key\
 				-subj "/C=KR/SR=Seoul/L=Seoul/O=42/OU=min-cho/CN=min-cho"

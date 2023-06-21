@@ -13,8 +13,6 @@ RUN apt-get update && \
             php-xml \
             curl \
             wget \
-            # sendmail \
-            # vim \
             mariadb-client && \
 	rm -rf /var/lib/apt/lists/* && \
     mkdir -p /run/php && \

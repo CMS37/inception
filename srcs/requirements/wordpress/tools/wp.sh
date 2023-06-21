@@ -53,7 +53,8 @@ else
 	
 	wp user create --allow-root --path=/var/www/html $WORDPRESS_USER $WORDPRESS_USER_EMAIL --role=contributor --user_pass=$WORDPRESS_USER_PASSWORD
 	touch /var/www/html/.up
-		
+
+	chown -R www-data:www-data /var/www/html
 fi
 
 exec /usr/sbin/php-fpm7.3 -F

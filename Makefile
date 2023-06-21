@@ -15,7 +15,6 @@ down:
 clean:
 	docker compose -f $(COMPOSE) down -v --rmi all --remove-orphans
 
-
 fclean: clean
 	-docker rm -f $$(docker ps -a -q)
 	-docker volume rm $$(docker volume -ls -q)

@@ -12,7 +12,7 @@ services:
     env_file:
       - .env
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - mariadb_data:/var/lib/mariadb
     networks:
       - inception
 

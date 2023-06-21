@@ -19,4 +19,4 @@ COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
 
 ENTRYPOINT ["/usr/local/bin/mariadb.sh"]
 
-CMD ["mysqld", "--user=mysql", "--console", "--datadir=/var/lib/mysql"]
+CMD ["mysqld", "--user=mysql", "--console", "--datadir=/var/lib/mariadb"]

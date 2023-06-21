@@ -2,8 +2,8 @@
 
 set -e
 
-if [ ! -d "/var/lib/mysql/wp-content" ]; then
-  mysql_install_db --datadir=/var/lib/mysql --auth-root-authentication-method=normal
+if [ ! -d "/var/lib/mariadb/$MYSQL_DATABASE" ]; then
+  mysql_install_db --datadir=/var/lib/mariadb --auth-root-authentication-method=normal
   mysqld --bootstrap << EOF
 USE mysql;
 FLUSH PRIVILEGES;
@@ -24,4 +24,4 @@ else
   echo "Database already exists."
 fi
 
-exec mysqld --datadir=/var/lib/mysql
+exec mysqld --datadir=/var/lib/mariadb

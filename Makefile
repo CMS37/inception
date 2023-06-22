@@ -7,7 +7,7 @@ all: up
 
 up:
 	-mkdir -p /home/min/data /home/min/data/mariadb /home/min/data/wordpress
-	docker compose -f $(COMPOSE) up -d
+	docker compose -f $(COMPOSE) up -d --build
 
 down:
 	docker compose -f $(COMPOSE) down

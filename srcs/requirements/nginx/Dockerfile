@@ -34,3 +34,5 @@ CMD ["nginx", "-g", "daemon off;"]
 # docker exec -it <container name> bash
 # cat /var/log/nginx/access.log 엑세스로그
 # cat /var/log/nginx/error.log 에러로그
+
+# nginx -g "daemon off;" : nginx를 foreground로 실행하고, nginx가 종료되면 컨테이너도 종료되도록 함 != 컨테이너가 바로 종료됨

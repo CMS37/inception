@@ -25,13 +25,6 @@ fclean: clean
 
 re: fclean all
 
-nginx:
-	docker build --no-cache -t nginx $(NGINX)
-wordpress:
-	docker build --no-cache -t wordpress $(WORDPRESS)
-mariadb:
-	docker build --no-cache -t mariadb $(MARIADB)
-
 .PHONY: all up down clean fclean re
 
 # docker compose 옵션

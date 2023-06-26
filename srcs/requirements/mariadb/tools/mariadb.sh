@@ -25,3 +25,7 @@ else
 fi
 
 exec mysqld --datadir=/var/lib/mariadb
+
+# USE mysql : mysql 실행
+# FLUSH PRIVILEGES; : 권한 적용(변경사항 적용 및 메모리 캐시 갱신)
+# utf8 COLLATE utf8_general_ci; : utf8 설정하고 대소문자 구분 안하고 정렬

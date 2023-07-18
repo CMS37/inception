@@ -12,20 +12,17 @@ up:
 down:
 	docker compose -f $(COMPOSE) down
 
-clean:
-	docker compose -f $(COMPOSE) down -v --rmi all --remove-orphans
+clean: down
 
-fclean: clean
-	-docker rm -f $$(docker ps -a -q)
-	-docker volume rm $$(docker volume -ls -q)
-	-docker system prune --force --all
-	-docker volume prune --force
-	-docker network prune --force
+fclean: 
+	-docker compose -f $(COMPOSE) down -v --rmi all --remove-orphans
+	-docker rm $(docker ps -a -q)
+	-docker system prune -f -a 
 	-sudo rm -rf ~/data/*/*
 
 re: fclean all
 
-.PHONY: all up down clean fclean re
+.PHONY: all up down clean fclean re	
 
 # docker compose 옵션
 # -v : 볼륨 삭제
@@ -33,8 +30,5 @@ re: fclean all
 # --remove-orphans : 사용하지 않는 컨테이너 삭제
 
 # docker 옵션
-# -f $$(docker ps -a -q) : 모든 컨테이너 삭제
-# -f $$(docker volume -ls -q) : 모든 볼륨 삭제
+# $(docker ps -a -q) : 모든 컨테이너 삭제
 # system prune : 사용하지 않는 모든 이미지, 컨테이너, 볼륨, 네트워크 삭제
-# volume prune : 사용하지 않는 볼륨 삭제
-# network prune : 사용하지 않는 네트워크 삭제

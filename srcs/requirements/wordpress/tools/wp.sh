@@ -1,20 +1,5 @@
 #!/bin/sh
 
-i=0
-while ! mysqladmin -h$MYSQL_HOST -u$MYSQL_USER -p$MYSQL_PASSWORD ping >/dev/null 2>&1; do
-  if [ $i -eq 60 ]; then
-    echo "Unable to connect to MariaDB after 5 minutes. Exiting."
-    exit 1
-  elif [ $i -eq 0 ]; then
-    echo "Waiting for MariaDB at Wordpress ..."
-  else
-    echo "Waiting for MariaDB at Wordpress ... ${i}"
-  fi
-  sleep 5
-  i=$(($i+1))
-done
-echo "Waiting for MariaDB at Wordpress ... done"
-
 if [ -f "/var/www/html/wp-config.php" ]
 then 
 	echo "wordpress already downloaded"
